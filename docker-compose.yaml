@@ -1,0 +1,51 @@
+version: "3.9"
+name: "php-unit"
+
+### NETWORKS ###
+# https://intranet.netlogix.de/pages/viewpage.action?pageId=109773200
+networks:
+  development_public:
+    external: true
+
+volumes:
+  database:
+
+### EXTENSION FIELDS ###
+# Helps eliminate repetition of sections
+# More Info on how to use this: https://github.com/htpcBeginner/docker-traefik/pull/228
+# Keys common to some of the services in basic-services.txt
+x-common-keys-core: &common-keys-core
+  networks:
+    - development_public
+  #    - private
+  security_opt:
+    - no-new-privileges:true
+  restart: on-failure
+
+services:
+  database:
+    <<: *common-keys-core
+    image: ghcr.io/netlogix/docker/mysql:8.0
+    command:
+      - --sql-mode=IGNORE_SPACE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_DATABASE: netlogix
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - database:/var/lib/mysql
+
+  app:
+    <<: *common-keys-core
+    image: php_unit_app
+    build:
+      context: ./app/
+      target: 'app_dev'
+    depends_on:
+      database:
+        condition: service_started
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - ./app/:/var/www
