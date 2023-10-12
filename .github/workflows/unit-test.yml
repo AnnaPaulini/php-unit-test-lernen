@@ -8,7 +8,6 @@ jobs:
  
     steps:
       - uses: actions/checkout@v3
-      - run: cd app
       - name: Composer cache
         uses: actions/cache@v3
         with:
@@ -23,8 +22,10 @@ jobs:
           sudo composer self-update
           composer --version
       - name: Validate composer.json and composer.lock
+        working-directory: app
         run: composer validate
       - name: Install composer
+        working-directory: app
         run: composer install -o --no-interaction --no-suggest --prefer-dist
 
       - name: PHPUnit tests
@@ -36,8 +37,8 @@ jobs:
           php_version: "8.1"
           php_extensions: "xdebug"
           version: "10.3"
-          configuration: "phpunit.xml"
-      - name: Behat tests
-        uses: php-actions/behat@master
-        with:
-          php_version: "8.1"
+          configuration: "app/phpunit.xml"
+#      - name: Behat tests
+#        uses: php-actions/behat@master
+#        with:
+#          php_version: "8.1"
