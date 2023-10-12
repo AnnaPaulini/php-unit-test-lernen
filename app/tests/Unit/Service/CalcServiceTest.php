@@ -1,6 +1,6 @@
 <?php
 
-namespace Netlogix\PhpUnit\Test\Service;
+namespace Netlogix\PhpUnit\Tests\Unit\Service;
 
 
 use Netlogix\PhpUnit\Service\CalcService;
