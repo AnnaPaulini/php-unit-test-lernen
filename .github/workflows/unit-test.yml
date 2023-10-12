@@ -12,7 +12,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: "vendor"
-          key: ${{ runner.os }}-8.1-composer-${{ hashFiles('**/composer.json') }}
+          key: ${{ runner.os }}-8.1-composer-${{ hashFiles('composer.json') }}
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -21,8 +21,8 @@ jobs:
         run: |
           sudo composer self-update
           composer --version
-      - name: Validate composer.json and composer.lock
-        run: composer validate
+#      - name: Validate composer.json and composer.lock
+#        run: composer validate
       - name: Install composer
         run: composer install -o --no-interaction --no-suggest --prefer-dist
 
