@@ -6,13 +6,13 @@
 >
   <coverage>
     <include>
-      <directory suffix=".php">/src/</directory>
+      <directory suffix=".php">src/</directory>
       <!--            <directory suffix=".php">features/NodeProcessor</directory>-->
     </include>
   </coverage>
   <testsuites>
     <testsuite name="unit tests">
-      <directory>app/tests/Unit</directory>
+      <directory>tests/Unit</directory>
     </testsuite>
   </testsuites>
 </phpunit>
