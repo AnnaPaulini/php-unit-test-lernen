@@ -27,10 +27,19 @@ Opens a bash in your container
 
 
 
-## Excecute a Unit Test
+## Excecute a Unit Test (in Composer Container)
 
 ### Execute all Testcases with `vendor/bin/phpunit`
 
 ### Execute a specific Testcase with `vendor/bin/phpunit [./path_to_testfile/testfile_name.php]`
 
 In our case `vendor/bin/phpunit ./tests/Unit/Service/CalcServiceTest.php`
+
+
+
+## Behat (in Composer Container)
+
+### Initialize new project with `vendor/bin/behat --init`
+
+### Execute behat with `vendor/bin/behat`
+
