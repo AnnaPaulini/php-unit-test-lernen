@@ -52,7 +52,11 @@ class FeatureContext implements Context
      */
     public function iAddSecondToFirst($numberTwo): void
     {
-        $this->calculatedResult = $this->calcService->addition($this->firstNumber, $numberTwo);
+        try {
+            $this->calculatedResult = $this->calcService->addition($this->firstNumber, $numberTwo);
+        } catch (Throwable $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -60,7 +64,12 @@ class FeatureContext implements Context
      */
     public function iSubtractSecondFromFirst($numberTwo): void
     {
-        $this->calculatedResult = $this->calcService->subtraction($this->firstNumber, $numberTwo);
+
+        try {
+            $this->calculatedResult = $this->calcService->subtraction($this->firstNumber, $numberTwo);
+        } catch (Throwable $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -68,7 +77,11 @@ class FeatureContext implements Context
      */
     public function iMultiplyFirstBySecond($numberTwo): void
     {
-        $this->calculatedResult = $this->calcService->multiplication($this->firstNumber, $numberTwo);
+        try {
+            $this->calculatedResult = $this->calcService->multiplication($this->firstNumber, $numberTwo);
+        } catch (Throwable $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -95,6 +108,19 @@ class FeatureContext implements Context
             return false;
         }
     }
+
+    /**
+     * @Then no exception should have been thrown
+     */
+    public function noExceptionShouldHaveBeenThrown(): bool
+    {
+        if ($this->lastException === null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     /**
      * @Then a division by zero error message should be thrown

@@ -8,6 +8,7 @@ Feature: Calculate numbers
     Given I have a number <numberOne>
     When I add a second number <numberTwo> to the first number
     Then the sum should be <sum>
+    And no exception should have been thrown
 
     Examples:
       | numberOne | numberTwo | sum |
@@ -21,6 +22,7 @@ Feature: Calculate numbers
     Given I have a number <numberOne>
     When I subtract a second number <numberTwo> from the first number
     Then the difference should be <difference>
+    And no exception should have been thrown
 
     Examples:
       | numberOne | numberTwo | difference |
@@ -37,6 +39,7 @@ Feature: Calculate numbers
     Given I have a number <numberOne>
     When I multiply the first number by a second number <numberTwo>
     Then the product should be <product>
+    And no exception should have been thrown
 
     Examples:
       | numberOne | numberTwo | product |
@@ -51,6 +54,7 @@ Feature: Calculate numbers
     Given I have a number <numberOne>
     When I divide the first number by a second number <numberTwo>
     Then the quotient should be <quotient>
+    And no exception should have been thrown
 
     Examples:
       | numberOne | numberTwo | quotient |
