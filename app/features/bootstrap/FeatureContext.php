@@ -14,6 +14,11 @@ class FeatureContext implements Context
 {
     private CalcService $calcService;
     private float $firstNumber;
+    private float $secondNumber;
+
+    private float $calculatedResult;
+
+    private ?Throwable $lastException = null;
 
     /**
      * Initializes context.
@@ -28,7 +33,7 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Transform /^(\d+\.*\d*)$/
+     * @Transform /^(-?\d+\.*\d*)$/
      */
     public function castStringToFloat(string $string): float
     {
@@ -36,117 +41,69 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Given /^I have (\d+\.*\d*)$/
+     * @Given /I have two numbers: (-?\d+\.*\d*) and (-?\d+\.*\d*)/
      */
-    public function iHave(float $numberOne)
+    public function iHaveTwoNumbers(float $numberOne, float $numberTwo): void
     {
-         $this->firstNumber = $numberOne;
+        $this->firstNumber = $numberOne;
+        $this->secondNumber = $numberTwo;
     }
 
     /**
-     * @When I add :numberTwo
+     * @When I add the second number to the first number
      */
-    public function iAdd($numberTwo)
+    public function iAddSecondToFirst(): void
     {
-        throw new PendingException();
+        $this->calculatedResult = $this->calcService->addition($this->firstNumber, $this->secondNumber);
     }
 
     /**
-     * @Then the sum should be :sum
+     * @When I subtract the second number from the first number
      */
-    public function theSumShouldBe($sum)
+    public function iSubtractSecondFromFirst(): void
     {
-        throw new PendingException();
-    }
-
-
-
-    /**
-     * @When I subtract a :arg1
-     */
-    public function iSubtractA($arg1)
-    {
-        throw new PendingException();
+        $this->calculatedResult = $this->calcService->subtraction($this->firstNumber, $this->secondNumber);
     }
 
     /**
-     * @Then the difference should be :difference
+     * @When I multiply the first number by the second number
      */
-    public function theDifferenceShouldBe($difference)
+    public function iMultiplyFirstBySecond(): void
     {
-        throw new PendingException();
+        $this->calculatedResult = $this->calcService->multiplication($this->firstNumber, $this->secondNumber);
     }
 
     /**
-     * @When I multiply it by a :arg1
+     * @When I divide the first number by the second number
      */
-    public function iMultiplyItByA($arg1)
+    public function iDivideFirstBySecond(): void
     {
-        throw new PendingException();
+        try {
+            $this->calculatedResult = $this->calcService->division($this->firstNumber, $this->secondNumber);
+        } catch (DivisionByZeroError $e) {
+            $this->lastException = $e;
+        }
+
     }
 
     /**
-     * @Then the product should be :arg1
+     * @Then /the (?:quotient|sum|difference|product) should be (-?\d+\.*\d*)/
      */
-    public function theProductShouldBe($arg1)
+    public function theResultShouldBe(float $estimatedResult): bool
     {
-        throw new PendingException();
-    }
-
-    /**
-     * @When I divide it by a :arg1
-     */
-    public function iDivideItByA($arg1)
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @When this :arg1 is not :arg2
-     */
-    public function thisIsNot($arg1, $arg2)
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @Then the quotient should be :arg1
-     */
-    public function theQuotientShouldBe($arg1)
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @When I divide it by a <numberTwo>
-     */
-    public function iDivideItByASecondNumber()
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @When this <numberTwo> is :arg1
-     */
-    public function thisSecondNumberIs($arg1)
-    {
-        throw new PendingException();
+        if ($this->calculatedResult === $estimatedResult) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
      * @Then a division by zero error message should be thrown
      */
-    public function anDivisionByZeroErrorMessageShouldBeThrown()
+    public function aDivisionByZeroErrorMessageShouldBeThrown(): bool
     {
-        throw new PendingException();
-    }
-
-    /**
-     * @Given /^I have (.*)$/
-     */
-    public function iHave($numberOne)
-    {
-        throw new PendingException();
+        return is_a($this->lastException, DivisionByZeroError::class);
     }
 
 }
