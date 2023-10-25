@@ -5,8 +5,8 @@ Feature: Calculate numbers
 
 
   Scenario Outline: Addition
-    Given I have two numbers: <numberOne> and <numberTwo>
-    When I add the second number to the first number
+    Given I have a number <numberOne>
+    When I add a second number <numberTwo> to the first number
     Then the sum should be <sum>
 
     Examples:
@@ -18,8 +18,8 @@ Feature: Calculate numbers
       | 568 | 13 | 581 |
 
   Scenario Outline: Subtraction
-    Given I have two numbers: <numberOne> and <numberTwo>
-    When I subtract the second number from the first number
+    Given I have a number <numberOne>
+    When I subtract a second number <numberTwo> from the first number
     Then the difference should be <difference>
 
     Examples:
@@ -34,8 +34,8 @@ Feature: Calculate numbers
       | 0.8 | 0.8 | 0 |
 
   Scenario Outline: Multiplication
-    Given I have two numbers: <numberOne> and <numberTwo>
-    When I multiply the first number by the second number
+    Given I have a number <numberOne>
+    When I multiply the first number by a second number <numberTwo>
     Then the product should be <product>
 
     Examples:
@@ -48,8 +48,8 @@ Feature: Calculate numbers
       | -274 | 0 | 0 |
 
   Scenario Outline: Division
-    Given I have two numbers: <numberOne> and <numberTwo>
-    When I divide the first number by the second number
+    Given I have a number <numberOne>
+    When I divide the first number by a second number <numberTwo>
     Then the quotient should be <quotient>
 
     Examples:
@@ -63,6 +63,6 @@ Feature: Calculate numbers
       | 1 | 3 | 0.3333333333333333 |
 
   Scenario: Division by 0
-    Given I have two numbers: 1.0 and 0.0
-    When I divide the first number by the second number
+    Given I have a number 1.0
+    When I divide the first number by a second number 0.0
     Then a division by zero error message should be thrown

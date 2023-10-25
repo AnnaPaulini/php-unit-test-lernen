@@ -14,7 +14,6 @@ class FeatureContext implements Context
 {
     private CalcService $calcService;
     private float $firstNumber;
-    private float $secondNumber;
 
     private float $calculatedResult;
 
@@ -41,45 +40,44 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Given /I have two numbers: (-?\d+\.*\d*) and (-?\d+\.*\d*)/
+     * @Given /I have a number (-?\d+\.*\d*)/
      */
-    public function iHaveTwoNumbers(float $numberOne, float $numberTwo): void
+    public function iHaveANumber(float $numberOne): void
     {
         $this->firstNumber = $numberOne;
-        $this->secondNumber = $numberTwo;
     }
 
     /**
-     * @When I add the second number to the first number
+     * @When /I add a second number (-?\d+\.*\d*) to the first number/
      */
-    public function iAddSecondToFirst(): void
+    public function iAddSecondToFirst($numberTwo): void
     {
-        $this->calculatedResult = $this->calcService->addition($this->firstNumber, $this->secondNumber);
+        $this->calculatedResult = $this->calcService->addition($this->firstNumber, $numberTwo);
     }
 
     /**
-     * @When I subtract the second number from the first number
+     * @When /I subtract a second number (-?\d+\.*\d*) from the first number/
      */
-    public function iSubtractSecondFromFirst(): void
+    public function iSubtractSecondFromFirst($numberTwo): void
     {
-        $this->calculatedResult = $this->calcService->subtraction($this->firstNumber, $this->secondNumber);
+        $this->calculatedResult = $this->calcService->subtraction($this->firstNumber, $numberTwo);
     }
 
     /**
-     * @When I multiply the first number by the second number
+     * @When /I multiply the first number by a second number (-?\d+\.*\d*)/
      */
-    public function iMultiplyFirstBySecond(): void
+    public function iMultiplyFirstBySecond($numberTwo): void
     {
-        $this->calculatedResult = $this->calcService->multiplication($this->firstNumber, $this->secondNumber);
+        $this->calculatedResult = $this->calcService->multiplication($this->firstNumber, $numberTwo);
     }
 
     /**
-     * @When I divide the first number by the second number
+     * @When /I divide the first number by a second number (-?\d+\.*\d*)/
      */
-    public function iDivideFirstBySecond(): void
+    public function iDivideFirstBySecond($numberTwo): void
     {
         try {
-            $this->calculatedResult = $this->calcService->division($this->firstNumber, $this->secondNumber);
+            $this->calculatedResult = $this->calcService->division($this->firstNumber, $numberTwo);
         } catch (DivisionByZeroError $e) {
             $this->lastException = $e;
         }
