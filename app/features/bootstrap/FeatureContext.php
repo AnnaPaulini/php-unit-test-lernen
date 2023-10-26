@@ -13,9 +13,8 @@ use Netlogix\PhpUnit\Service\CalcService;
 class FeatureContext implements Context
 {
     private CalcService $calcService;
-    private float $firstNumber;
 
-    private float $calculatedResult;
+    private float $interimResult;
 
     private ?Throwable $lastException = null;
 
@@ -44,65 +43,63 @@ class FeatureContext implements Context
      */
     public function iHaveANumber(float $numberOne): void
     {
-        $this->firstNumber = $numberOne;
+        $this->interimResult = $numberOne;
     }
 
     /**
-     * @When /I add a second number (-?\d+\.*\d*) to the first number/
+     * @When /I add to (?:the first number|the result) the number (-?\d+\.*\d*)/
      */
-    public function iAddSecondToFirst($numberTwo): void
+    public function addToResult($number): void 
     {
         try {
-            $this->calculatedResult = $this->calcService->addition($this->firstNumber, $numberTwo);
+            $this->interimResult = $this->calcService->addition($this->interimResult, $number);
         } catch (Throwable $e) {
             $this->lastException = $e;
         }
     }
 
     /**
-     * @When /I subtract a second number (-?\d+\.*\d*) from the first number/
+     * @When /I divide (?:the first number|the result) by the number (-?\d+\.*\d*)/
      */
-    public function iSubtractSecondFromFirst($numberTwo): void
-    {
-
-        try {
-            $this->calculatedResult = $this->calcService->subtraction($this->firstNumber, $numberTwo);
-        } catch (Throwable $e) {
-            $this->lastException = $e;
-        }
-    }
-
-    /**
-     * @When /I multiply the first number by a second number (-?\d+\.*\d*)/
-     */
-    public function iMultiplyFirstBySecond($numberTwo): void
+    public function divideResultBy($number): void 
     {
         try {
-            $this->calculatedResult = $this->calcService->multiplication($this->firstNumber, $numberTwo);
-        } catch (Throwable $e) {
-            $this->lastException = $e;
-        }
-    }
-
-    /**
-     * @When /I divide the first number by a second number (-?\d+\.*\d*)/
-     */
-    public function iDivideFirstBySecond($numberTwo): void
-    {
-        try {
-            $this->calculatedResult = $this->calcService->division($this->firstNumber, $numberTwo);
+            $this->interimResult = $this->calcService->division($this->interimResult, $number);
         } catch (DivisionByZeroError $e) {
             $this->lastException = $e;
         }
-
     }
 
     /**
-     * @Then /the (?:quotient|sum|difference|product) should be (-?\d+\.*\d*)/
+     * @When /I multiply (?:the first number|the result) by the number (-?\d+\.*\d*)/
+     */
+    public function multiplyResultBy($number): void
+    {
+        try {
+            $this->interimResult = $this->calcService->multiplication($this->interimResult, $number);
+        } catch (Throwable $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When /I subtract from (?:the first number|the result) the number (-?\d+\.*\d*)/
+     */
+    public function subtractFromResult($number): void
+    {
+        try {
+            $this->interimResult = $this->calcService->subtraction($this->interimResult, $number);
+        } catch (Throwable $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @Then /the (?:quotient|sum|difference|product|result) should be (-?\d+\.*\d*)/
      */
     public function theResultShouldBe(float $estimatedResult): bool
     {
-        if ($this->calculatedResult === $estimatedResult) {
+        if ($this->interimResult === $estimatedResult) {
             return true;
         } else {
             return false;
@@ -120,7 +117,6 @@ class FeatureContext implements Context
             return false;
         }
     }
-
 
     /**
      * @Then a division by zero error message should be thrown
